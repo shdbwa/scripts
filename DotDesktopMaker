@@ -1,0 +1,35 @@
+#!/bin/bash 
+#DotDesktopMaker, a script to make main menu entries
+
+printf "\e[1m 
+#########################################################
+#  DotDesktopMaker, a script to make main menu entries  #
+#########################################################"
+printf "\a"
+printf "\n"
+printf "Path to program or program name if in \e[1mPATH"
+read EXEC
+#read $CATEGORIES
+clear
+echo "Enter a comment"
+read COMMENT
+BASENAME=$(basename $EXEC)
+clear
+echo "Choose a categorie"
+CATEGORIES=$(cat /usr/share/applications/*.desktop| grep -P Categories|sed -e 's/Categories=//'|sort|uniq -u +2|percol)
+echo "Launch in terminal"
+TERM=$(printf "true\nfalse"|percol|xargs echo)
+echo "
+[Desktop Entry]
+Version=1.0
+Type=Application
+Categories=$CATEGORIES
+Comment=$COMMENT
+TryExec=$EXEC
+Exec=$EXEC %F
+Icon=$BASENAME
+Name=$BASENAME
+Terminal=$TERM
+" > $HOME/.local/share/applications/$BASENAME.desktop
+clear
+echo "New shortcut created for $BASENAME in $HOME/.local/share/applications/$BASENAME.desktop"
